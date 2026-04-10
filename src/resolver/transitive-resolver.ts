@@ -81,3 +81,17 @@ export function findTransitiveConflicts(
 
   return conflicts;
 }
+
+/**
+ * Returns deps that are present in `head` but absent in `base` (newly added
+ * transitive dependencies), and deps present in `base` but absent in `head`
+ * (removed transitive dependencies).
+ */
+export function findTransitiveAdditionsAndRemovals(
+  base: Map<string, TransitiveDep>,
+  head: Map<string, TransitiveDep>
+): { added: TransitiveDep[]; removed: TransitiveDep[] } {
+  const added = [...head.values()].filter((dep) => !base.has(dep.name));
+  const removed = [...base.values()].filter((dep) => !head.has(dep.name));
+  return { added, removed };
+}
