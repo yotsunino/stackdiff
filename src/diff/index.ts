@@ -10,3 +10,12 @@ export { compareToBaseline, exceedsDriftThreshold, formatBaselineSummary } from 
 export { isExactPin, getPinnedPackages, diffPinnedPackages, formatPinnedSummaryText } from './pinned-packages';
 export { classifyDriftSeverity, detectDrift, formatDriftReportText } from './drift-detector';
 export { classifyOutdated, detectOutdated, formatOutdatedText } from './outdated-detector';
+export { detectDuplicates, buildDuplicateReport, formatDuplicateReportText } from './duplicate-detector';
+export { isRestrictiveLicense, diffLicenses, formatLicenseReportText } from './license-checker';
+export { buildDepGraph, detectCircular, formatCircularReportText } from './circular-detector';
+export { isDeprecated, detectDeprecated, diffDeprecated, formatDeprecatedReportText } from './deprecated-detector';
+export { computeSizeImpact, buildSizeImpactReport, formatSizeImpactText } from './size-impact';
+export { classifyChangelogType, buildChangelog, formatChangelogText } from './changelog-builder';
+export { checkAgainstPolicy, formatPolicyReportText } from './security-policy';
+export { computeAgeInDays, buildAgeReport, formatAgeReportText } from './dependency-age';
+export { calculateScore, gradeScore, formatScoreText } from './score-calculator';
