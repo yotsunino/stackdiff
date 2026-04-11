@@ -36,3 +36,15 @@ export function formatIgnoreSummary(patterns: string[]): string {
   if (patterns.length === 0) return 'No packages ignored.';
   return `Ignoring ${patterns.length} pattern(s): ${patterns.join(', ')}`;
 }
+
+/**
+ * Merges two IgnoreOptions objects, deduplicating patterns.
+ * Useful when combining ignore patterns from config files and CLI flags.
+ */
+export function mergeIgnoreOptions(
+  base: IgnoreOptions,
+  override: IgnoreOptions
+): IgnoreOptions {
+  const merged = Array.from(new Set([...base.ignore, ...override.ignore]));
+  return { ignore: merged };
+}
