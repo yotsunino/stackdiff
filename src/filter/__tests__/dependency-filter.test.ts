@@ -23,6 +23,10 @@ describe('matchesPattern', () => {
     expect(matchesPattern('foo-plugin', '*-plugin')).toBe(true);
     expect(matchesPattern('foo-util', '*-plugin')).toBe(false);
   });
+
+  it('matches bare wildcard', () => {
+    expect(matchesPattern('anything', '*')).toBe(true);
+  });
 });
 
 describe('isIncluded', () => {
@@ -55,6 +59,10 @@ describe('filterDependencies', () => {
     expect(filterDependencies(entries, {})).toHaveLength(3);
   });
 
+  it('returns empty array when given empty entries', () => {
+    expect(filterDependencies([], { onlyBreaking: true })).toHaveLength(0);
+  });
+
   it('filters by onlyBreaking', () => {
     const result = filterDependencies(entries, { onlyBreaking: true });
     expect(result).toHaveLength(1);
@@ -79,5 +87,11 @@ describe('filterDependencies', () => {
   it('combines multiple filter options', () => {
     const result = filterDependencies(entries, { onlyBreaking: true, exclude: ['lodash'] });
     expect(result).toHaveLength(0);
+  });
+
+  it('combines onlyDirect and onlyBreaking', () => {
+    const result = filterDependencies(entries, { onlyDirect: true, onlyBreaking: true });
+    expect(result).toHaveLength(1);
+    expect(result[0].name).toBe('lodash');
   });
 });
