@@ -54,6 +54,27 @@ describe('readCache / writeCache', () => {
     expect(result!.hash).toBe('abc123');
     expect(result!.dependencies).toEqual(sampleDeps);
   });
+
+  it('overwrites an existing cache entry with updated data', () => {
+    const dir = makeTempDir();
+    const entry: CacheEntry = {
+      hash: 'abc123',
+      timestamp: 1000,
+      dependencies: sampleDeps,
+    };
+    writeCache(dir, 'abc123', entry);
+
+    const updatedDeps: DependencyMap = new Map([
+      ['lodash', { name: 'lodash', version: '4.17.22', resolved: '' }],
+    ]);
+    const updatedEntry: CacheEntry = { hash: 'abc123', timestamp: 2000, dependencies: updatedDeps };
+    writeCache(dir, 'abc123', updatedEntry);
+
+    const result = readCache(dir, 'abc123');
+    expect(result).not.toBeNull();
+    expect(result!.timestamp).toBe(2000);
+    expect(result!.dependencies).toEqual(updatedDeps);
+  });
 });
 
 describe('getOrParse', () => {
