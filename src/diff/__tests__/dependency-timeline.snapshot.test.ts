@@ -42,4 +42,15 @@ describe('dependency-timeline snapshot', () => {
     expect(report.totalChanged).toBe(0);
     expect(report).toMatchSnapshot();
   });
+
+  it('reports correct counts for added and removed packages', () => {
+    const base = makeDepMap({ alpha: '1.0.0', beta: '2.0.0', gamma: '3.0.0' });
+    const head = makeDepMap({ alpha: '1.0.0', delta: '4.0.0' });
+    const report = buildTimeline(base, head);
+    const added = report.changes.filter((c) => c.type === 'added');
+    const removed = report.changes.filter((c) => c.type === 'removed');
+    expect(added).toHaveLength(1);
+    expect(removed).toHaveLength(2);
+    expect(report.totalChanged).toBe(3);
+  });
 });
