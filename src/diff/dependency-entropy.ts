@@ -101,5 +101,19 @@ export function formatEntropyReportText(report: EntropyReport): string {
     lines.push('');
   }
 
+  const stable = report.entries.filter((e) => e.label === 'stable');
+  lines.push(`### Stable: ${stable.length} package(s) pinned to a single version`);
+
   return lines.join('\n');
+}
+
+/**
+ * Returns only the entries whose entropy label matches the given label.
+ * Useful for filtering the report to a specific concern level.
+ */
+export function filterEntropyEntries(
+  report: EntropyReport,
+  label: EntropyEntry['label'],
+): EntropyEntry[] {
+  return report.entries.filter((e) => e.label === label);
 }
