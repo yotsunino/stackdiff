@@ -30,6 +30,10 @@ describe('classifyMaturity', () => {
   it('detects experimental/canary', () => {
     expect(classifyMaturity('0.0.1-canary.5')).toBe('experimental');
   });
+
+  it('returns stable for version with build metadata', () => {
+    expect(classifyMaturity('1.0.0+build.42')).toBe('stable');
+  });
 });
 
 describe('scoreMaturity', () => {
@@ -74,6 +78,13 @@ describe('buildMaturityReport', () => {
     expect(report.entries[0].maturityLevel).toBe('alpha');
     expect(report.entries[1].maturityLevel).toBe('stable');
   });
+
+  it('computes correct averageScore across mixed maturity levels', () => {
+    // stable major>=1 scores 100, alpha scores 30 => average = 65
+    const deps = makeDepMap({ a: '1.0.0', b: '1.0.0-alpha.1' });
+    const report = buildMaturityReport(deps);
+    expect(report.averageScore).toBe(65);
+  });
 });
 
 describe('formatMaturityReportText', () => {
@@ -91,5 +102,12 @@ describe('formatMaturityReportText', () => {
     const report = buildMaturityReport(deps);
     const text = formatMaturityReportText(report);
     expect(text).toContain('⚠');
+  });
+
+  it('does not add warning flag for stable entries', () => {
+    const deps = makeDepMap({ stable: '2.0.0' });
+    const report = buildMaturityReport(deps);
+    const text = formatMaturityReportText(report);
+    expect(text).not.toContain('⚠');
   });
 });
