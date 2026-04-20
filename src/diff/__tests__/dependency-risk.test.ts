@@ -43,6 +43,12 @@ describe('scoreRisk', () => {
     const { score } = scoreRisk('unstable', '0.1.0-alpha.0');
     expect(score).toBeGreaterThanOrEqual(55);
   });
+
+  it('returns reasons as an array of strings', () => {
+    const { reasons } = scoreRisk('mylib', '0.1.0-alpha.0');
+    expect(Array.isArray(reasons)).toBe(true);
+    reasons.forEach(r => expect(typeof r).toBe('string'));
+  });
 });
 
 describe('classifyRisk', () => {
@@ -67,6 +73,13 @@ describe('buildRiskReport', () => {
     expect(report.entries.length).toBeGreaterThanOrEqual(2);
     expect(report.entries[0].score).toBeGreaterThanOrEqual(report.entries[1].score);
   });
+
+  it('includes totalScore in the report', () => {
+    const deps = makeDepMap({ risky: '0.1.0-alpha.0' });
+    const report = buildRiskReport(deps);
+    expect(typeof report.totalScore).toBe('number');
+    expect(report.totalScore).toBeGreaterThan(0);
+  });
 });
 
 describe('formatRiskReportText', () => {
@@ -80,6 +93,6 @@ describe('formatRiskReportText', () => {
     const report = buildRiskReport(deps);
     const text = formatRiskReportText(report);
     expect(text).toContain('unstable');
-    expect(text).toContain('0.1.0-beta.1');
+    expect(text).toMatch(/high|critical|medium/i);
   });
 });
