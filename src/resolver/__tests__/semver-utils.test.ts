@@ -25,6 +25,14 @@ describe("parseSemver", () => {
   it("returns null for invalid version", () => {
     expect(parseSemver("not-a-version")).toBeNull();
   });
+
+  it("returns null for empty string", () => {
+    expect(parseSemver("")).toBeNull();
+  });
+
+  it("returns null for version with missing patch segment", () => {
+    expect(parseSemver("1.2")).toBeNull();
+  });
 });
 
 describe("isCompatible", () => {
@@ -75,6 +83,10 @@ describe("sortVersions", () => {
 
   it("handles a single version", () => {
     expect(sortVersions(["3.1.4"])).toEqual(["3.1.4"]);
+  });
+
+  it("handles an empty array", () => {
+    expect(sortVersions([])).toEqual([]);
   });
 
   it("does not mutate the original array", () => {
