@@ -34,4 +34,12 @@ describe('dependency-redundancy snapshot', () => {
     const report = detectRedundancy(base, head);
     expect(formatRedundancyReportText(report)).toMatchSnapshot();
   });
+
+  it('matches snapshot when head has no packages', () => {
+    const base = makeDepMap([['react', { version: '18.2.0' }]]);
+    const head = makeDepMap([]);
+    const report = detectRedundancy(base, head);
+    expect(formatRedundancyReportText(report)).toMatchSnapshot();
+    expect(report).toMatchSnapshot();
+  });
 });
